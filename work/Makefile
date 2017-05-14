@@ -1,14 +1,14 @@
-lab5: lab5.c
-	gcc lab5.c -o lab5
+lab5:	lab5.o
+	gcc lab5.o -o lab5 -lm
+
+lab5.o:	lab5.c
+	gcc -c lab5.c
 
 clean:
 	rm -f lab5 lab5.o
 
-install: lab5
-	mkdir -p /opt/lab5
-	cp lab5 /opt/lab5/lab5
-	ln -sf /opt/lab5/lab5 /usr/bin/lab5
+install:
+	cp lab5 bin/lab5
 
-uninstall:
-	rm -rf /opt/lab5
-	rm -f /usr/bin/lab5
+uninstall: 
+	rm -f bin/lab5
