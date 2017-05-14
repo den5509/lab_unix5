@@ -1,37 +1,35 @@
-#include <fcntl.h>
 #include <unistd.h>
-#include <string.h>
 #include <stdio.h>
 
-#define WRSTR() write(fd, str, strlen(str))
-#define NEWLINE(X) write(X, "\n", strlen("\n"))
-
-int main(int argc, char *argv[], char *envp[])
-{
-    char str[128];
-
-    
-    int fd = open("/lab5/log/output.txt", (O_WRONLY | O_CREAT | O_TRUNC | O_SYNC), 0666);
-    if (fd == -1) return 1;
-
-
-    sprintf(str, "argc: %i\n\nargv:\n", argc); WRSTR();
-    for (int i = 0; i < argc; i++) {
-        sprintf(str, "$%i: ", i); WRSTR();
-        write(fd, argv[i], strlen(argv[i]));
-        NEWLINE(fd);
+int main(int argc, char ** argv, char ** env){
+    char ** ptr;
+    printf("Main process:\n");  
+    printf("\tArguments:\n");
+    for( ptr = argv; *ptr; ++ptr )
+        printf("\t\t%s\n", *ptr);
+    printf("\n");
+    printf("\tEnvironment:\n");
+    for( ptr = env; *ptr; ++ptr )
+        printf("\t\t%s\n", *ptr);
+    printf("\n");
+    switch( fork() ){
+        case -1:
+            fprintf(stderr, "forkng error\n");
+            return 1;
+        case 0:
+            wait();
+            break;
+        default:
+            printf("Children process:\n");  
+            printf("\tArguments:\n");
+            for( ptr = argv; *ptr; ++ptr )
+                printf("\t\t%s\n", *ptr);
+            printf("\n");
+            printf("\tEnvironment:\n");
+            for( ptr = env; *ptr; ++ptr )
+                printf("\t\t%s\n", *ptr);
+            printf("\n");
+        break;
     }
-    NEWLINE(fd);
-
-    sprintf(str, "envp:\n"); WRSTR();
-    for (int i = 0; envp[i] != NULL; i++) {
-        write(fd, envp[i], strlen(envp[i]));
-        NEWLINE(fd);
-    }
-
-    close(fd);
-
-    sprintf(str, "Work, list!\n"); write(1, str, strlen(str));
-
     return 0;
 }

@@ -1,0 +1,74 @@
+
+Denis Gorelik, 4645M
+
+WORK REPORT
+
+Makefile
+bin
+lab5.txt
+lab5.c
+
+lab5.c
+#include <unistd.h>
+#include <stdio.h>
+
+int main(int argc, char ** argv, char ** env){
+    char ** ptr;
+    printf("Main process:\n");  
+    printf("\tArguments:\n");
+    for( ptr = argv; *ptr; ++ptr )
+        printf("\t\t%s\n", *ptr);
+    printf("\n");
+    printf("\tEnvironment:\n");
+    for( ptr = env; *ptr; ++ptr )
+        printf("\t\t%s\n", *ptr);
+    printf("\n");
+    switch( fork() ){
+        case -1:
+            fprintf(stderr, "forkng error\n");
+            return 1;
+        case 0:
+            wait();
+            break;
+        default:
+            printf("Child process:\n");  
+            printf("\tArguments:\n");
+            for( ptr = argv; *ptr; ++ptr )
+                printf("\t\t%s\n", *ptr);
+            printf("\n");
+            printf("\tEnvironment:\n");
+            for( ptr = env; *ptr; ++ptr )
+                printf("\t\t%s\n", *ptr);
+            printf("\n");
+        break;
+    }
+    return 0;
+}
+
+
+Makefile
+
+lab5:	lab5.o
+		gcc lab5.o -o lab5 -lm
+
+lab5.o:	lab5.c
+		gcc -c lab5.c
+
+clean:
+		rm -f lab5 lab5.o
+
+install:
+		cp lab5 bin/lab5
+
+uninstall: 
+		rm -f bin/lab5
+make lab5
+gcc -c lab5.c
+gcc lab5.o -o lab5 -lm
+make install
+cp lab5 bin/lab5
+make clean
+rm -f lab5 lab5.o
+
+sh-4.2$ bin/lab5 LOL_ARG1 LOL_ARG2 LOL_ARG3
+
