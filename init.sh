@@ -1,15 +1,4 @@
-cd /work
-
-make clean && make install
-
-[ "$?" != "0" ] && echo "Error 1" && exit 1
-
-echo Start
-bin/lab5
-
-[ "$?" = "0" ] \
-    && echo "Profit!" && exit 0\
-|| echo "Error 2" && exit 1
-
-cd /work
-
+#!/bin/bash
+#Вывод отчета на экран при запуске
+cat /home/student/unix_lab5/work/lab05.txt
+/bin/bash
